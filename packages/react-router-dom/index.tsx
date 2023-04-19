@@ -929,7 +929,7 @@ type SetURLSearchParams = (
  * Submits a HTML `<form>` to the server without reloading the page.
  */
 export interface SubmitFunction {
-  (
+  <T extends SubmitTarget = SubmitTarget>(
     /**
      * Specifies the `<form>` to be submitted to the server, a specific
      * `<button>` or `<input type="submit">` to use to submit the form, or some
@@ -938,15 +938,139 @@ export interface SubmitFunction {
      * Note: When using a `<button>` its `name` and `value` will also be
      * included in the form data that is submitted.
      */
-    target: SubmitTarget,
+    target: T,
 
     /**
      * Options that override the `<form>`'s own attributes. Required when
      * submitting arbitrary data without a backing `<form>`.
      */
-    options?: SubmitOptions
+    options?: SubmitOptions<T>
   ): void;
 }
+
+// Test Cases
+// let submit: SubmitFunction = () => {};
+
+// Should infer payload as { a: number }
+// submit(
+//   { a: 1 },
+//   {
+//     encType: null,
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should infer payload as { a: number }
+// submit(
+//   { a: 1 },
+//   {
+//     encType: "application/json",
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should infer payload as { a: number }
+// submit(
+//   { a: 1 },
+//   {
+//     encType: "text/plain",
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should infer payload as undefined
+// submit(
+//   { a: 1 },
+//   {
+//     encType: 'application/x-www-form-urlencoded',
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should infer payload as undefined
+// submit(
+//   { a: 1 },
+//   {
+//     encType: undefined,
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should infer payload as undefined
+// submit(
+//   { a: 1 },
+//   {
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// Should allow options to be left off completely
+// submit({ a: 1 });
+
+// Should infer payload as undefined
+// submit(
+//   { a: 1 },
+//   {
+//     encType: 'application/x-www-form-urlencoded',
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// TODO: Now that we've added `NonNullable<unknown>` to the `SubmitTarget` type
+// to allow for raw payload submissions, we should also ideally error if the
+// user passes something we don't know how to convert to FormData and specifies
+// application/x-www-form-urlencoded or undefined as the encType.  This is
+// basically when target is not any of following:
+// - Formelement, InputElement, ButtonElement
+// - FormData
+// - URLSearchParams
+// - JS object that we can call Object.keys on
+
+// Ideally this would throw a type error
+// submit(
+//   "You can't call Object.keys on me",
+//   {
+//     encType: 'application/x-www-form-urlencoded',
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// As would this
+// submit(
+//   "You can't call Object.keys on me",
+//   {
+//     encType: undefined,
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
+
+// And this
+// submit(
+//   "You can't call Object.keys on me",
+//   {
+//     action({ request, payload }) {
+//       return null;
+//     },
+//   }
+// );
 
 /**
  * Returns a function that may be used to programmatically submit a form (or
@@ -1088,11 +1212,11 @@ let fetcherId = 0;
 
 export type FetcherWithComponents<TData> = Fetcher<TData> & {
   Form: ReturnType<typeof createFetcherForm>;
-  submit: (
-    target: SubmitTarget,
+  submit: <T extends SubmitTarget = SubmitTarget>(
+    target: T,
     // Fetchers cannot replace/preventScrollReset because they are not
     // navigation events
-    options?: Omit<SubmitOptions, "replace" | "preventScrollReset">
+    options?: Omit<SubmitOptions<T>, "replace" | "preventScrollReset">
   ) => void;
   load: (href: string | LoaderFunction) => void;
 };

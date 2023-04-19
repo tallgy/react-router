@@ -120,29 +120,12 @@ export type SubmitTarget =
   | NonNullable<unknown> // Raw payload submissions
   | null;
 
-export interface SubmitOptions {
+type BaseSubmitOptions = {
   /**
    * The HTTP method used to submit the form. Overrides `<form method>`.
    * Defaults to "GET".
    */
   method?: HTMLFormMethod;
-
-  /**
-   * The action URL path used to submit the form. Overrides `<form action>`.
-   * Defaults to the path of the current route.
-   */
-  action?: string | ActionFunction;
-
-  /**
-   * The action URL used to submit the form. Overrides `<form encType>`.
-   * Defaults to "application/x-www-form-urlencoded".  Specifying `null` will
-   * opt-out of serialization and will submit the data directly to your action
-   * in the `payload` parameter.
-   *
-   * In v7, the default behavior will change from "application/x-www-form-urlencoded"
-   * to `null` and will make serialization opt-in
-   */
-  encType?: FormEncType | null;
 
   /**
    * Set `true` to replace the current entry in the browser's history stack
@@ -163,7 +146,44 @@ export interface SubmitOptions {
    * navigation when using the <ScrollRestoration> component
    */
   preventScrollReset?: boolean;
-}
+};
+
+// Discriminated union on encType so we know of we can infer the `action` `payload`
+export type SubmitOptions<T = any> =
+  | (BaseSubmitOptions & {
+      /**
+       * The action URL path used to submit the form. Overrides `<form action>`.
+       * Defaults to the path of the current route.  Can also specify a custom
+       * action function
+       */
+      action?: string | ActionFunction<T>;
+
+      /**
+       * The form encoding type. Overrides `<form encType>`.
+       *
+       * When set to null, application/json, or text/plain we will send the raw
+       * payload along to the action function.
+       */
+      encType: Exclude<FormEncType, "application/x-www-form-urlencoded">;
+    })
+  | (BaseSubmitOptions & {
+      /**
+       * The action URL path used to submit the form. Overrides `<form action>`.
+       * Defaults to the path of the current route.  Can also specify a custom
+       * action function
+       */
+      action?: string | ActionFunction<undefined>;
+
+      /**
+       * The form encoding type. Overrides `<form encType>`.  Defaults to
+       * "application/x-www-form-urlencoded", which means we'll serialize any
+       * payload into FormData before handling off to the router.
+       *
+       * In v7, the default behavior will change from "application/x-www-form-urlencoded"
+       * to `null` and will make serialization opt-in.
+       */
+      encType?: "application/x-www-form-urlencoded";
+    });
 
 export function getFormSubmissionInfo(
   target: SubmitTarget,

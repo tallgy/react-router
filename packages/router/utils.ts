@@ -126,8 +126,8 @@ export interface LoaderFunctionArgs extends DataFunctionArgs {}
 /**
  * Arguments passed to action functions
  */
-export interface ActionFunctionArgs extends DataFunctionArgs {
-  payload: any;
+export interface ActionFunctionArgs<T = undefined> extends DataFunctionArgs {
+  payload: T;
 }
 
 /**
@@ -147,8 +147,8 @@ export interface LoaderFunction {
 /**
  * Route action function signature
  */
-export interface ActionFunction {
-  (args: ActionFunctionArgs): Promise<DataFunctionValue> | DataFunctionValue;
+export interface ActionFunction<T = undefined> {
+  (args: ActionFunctionArgs<T>): Promise<DataFunctionValue> | DataFunctionValue;
 }
 
 /**
