@@ -595,6 +595,10 @@ function explodeOptionalSegments(path: string): string[] {
   let segments = path.split("/");
   if (segments.length === 0) return [];
 
+  if (path.endsWith("??")) {
+    return ["", path.replace(/\?\?$/, "")];
+  }
+
   let [first, ...rest] = segments;
 
   // Optional path segments are denoted by a trailing `?`

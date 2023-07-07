@@ -174,6 +174,37 @@ You can have optional static segments, too:
 <Route path="/project/task?/:taskId" />
 ```
 
+### Optional Paths
+
+When using `?` to mark a URL segment as optional, it only applies to the slash-delimited segment, but this is not always what you are looking for. What if you're URL structure has a static segment prior to the language code, such as `/lang/:lang`?
+
+```tsx
+<Route path="/lang/:lang?">
+  <Route path="categories">
+// This supports:
+//   /categories
+//   /lang/categories    <-- We don't want this!
+//   /lang/en/categories
+```
+
+Making the static portion optional as well only makes it worse!
+
+```tsx
+<Route path="/lang?/:lang?">
+  <Route path="categories">
+// Now, /categories get's consumed as the :lang parameter because /lang is optional :/
+```
+
+Instead, if you end a `path` with a double question mark, then you tell React Router that the entire `path` is optional:
+
+```tsx
+<Route path="/lang/:lang??">
+  <Route path="categories">
+// This supports:
+//   /categories
+//   /lang/en/categories
+```
+
 ### Splats
 
 Also known as "catchall" and "star" segments. If a route path pattern ends with `/*` then it will match any characters following the `/`, including other `/` characters.

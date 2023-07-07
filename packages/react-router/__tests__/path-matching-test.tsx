@@ -431,6 +431,38 @@ describe("path matching with optional segments", () => {
       { path: "abc", params: {} },
     ]);
   });
+
+  test("optional multi-segment paths", () => {
+    let routes = [
+      {
+        path: "/user/:userId??",
+        children: [
+          {
+            path: "stuff",
+          },
+        ],
+      },
+    ];
+
+    expect(pickPathsAndParams(routes, "/user")).toEqual(null);
+    expect(pickPathsAndParams(routes, "/user/matt")).toEqual([
+      {
+        path: "/user/:userId??",
+        params: { userId: "matt" },
+      },
+    ]);
+    expect(pickPathsAndParams(routes, "/user/matt/stuff")).toEqual([
+      {
+        path: "/user/:userId??",
+        params: { userId: "matt" },
+      },
+      {
+        path: "stuff",
+        params: { userId: "matt" },
+      },
+    ]);
+    expect(pickPathsAndParams(routes, "/user/matt/stuff/nope")).toEqual(null);
+  });
 });
 
 describe("path matching with optional dynamic segments", () => {
