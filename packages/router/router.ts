@@ -983,6 +983,7 @@ export function createRouter(init: RouterInit): Router {
   ) {
     // @ts-expect-error
     if (typeof document !== "undefined" && document.startViewTransition) {
+      // TODO: Do we need a flushSync here?
       // @ts-expect-error
       document.startViewTransition(() =>
         completeNavigationForRealz(location, newState)
