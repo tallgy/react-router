@@ -23,6 +23,8 @@ function compilePath(path, options) {
 }
 
 /**
+ * TODO
+ * 用于将URL路径名与路径匹配的公共API。
  * Public API for matching a URL pathname to a path.
  */
 function matchPath(pathname, options = {}) {
@@ -53,9 +55,9 @@ function matchPath(pathname, options = {}) {
     if (exact && !isExact) return null;
 
     return {
-      path, // the path used to match
-      url: path === "/" && url === "" ? "/" : url, // the matched portion of the URL
-      isExact, // whether or not we matched exactly
+      path, // the path used to match 匹配的路径
+      url: path === "/" && url === "" ? "/" : url, // the matched portion of the URL URL的匹配部分
+      isExact, // whether or not we matched exactly 我们是否完全匹配
       params: keys.reduce((memo, key, index) => {
         memo[key.name] = values[index];
         return memo;

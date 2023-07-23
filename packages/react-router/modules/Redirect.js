@@ -8,6 +8,7 @@ import RouterContext from "./RouterContext.js";
 import generatePath from "./generatePath.js";
 
 /**
+ * 使用组件以编程方式导航的公共API。
  * The public API for navigating programmatically with a component.
  */
 function Redirect({ computedMatch, to, push = false }) {
@@ -30,6 +31,7 @@ function Redirect({ computedMatch, to, push = false }) {
             : to
         );
 
+        // 在静态上下文中呈现时，请立即设置新位置。
         // When rendering in a static context,
         // set the new location immediately.
         if (staticContext) {

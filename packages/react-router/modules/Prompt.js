@@ -6,7 +6,10 @@ import Lifecycle from "./Lifecycle.js";
 import RouterContext from "./RouterContext.js";
 
 /**
+ * 用于在离开屏幕之前提示用户的公共API.
  * The public API for prompting the user before navigating away from a screen.
+ * 
+ * 依赖使用 history库中的 block history4 中 block 就是代表了 Prompt
  */
 function Prompt({ message, when = true }) {
   return (

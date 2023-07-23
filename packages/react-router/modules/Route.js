@@ -36,7 +36,7 @@ class Route extends React.Component {
 
           const location = this.props.location || context.location;
           const match = this.props.computedMatch
-            ? this.props.computedMatch // <Switch> already computed the match for us
+            ? this.props.computedMatch // <Switch> already computed the match for us <Switch>已经为我们计算了匹配
             : this.props.path
             ? matchPath(location.pathname, this.props)
             : context.match;
@@ -45,6 +45,7 @@ class Route extends React.Component {
 
           let { children, component, render } = this.props;
 
+          // Preact 默认使用空数组作为子数组，因此如果是这种情况，请使用null。
           // Preact uses an empty array as children by
           // default, so use null if that's the case.
           if (Array.isArray(children) && isEmptyChildren(children)) {
