@@ -23,7 +23,6 @@ function compilePath(path, options) {
 }
 
 /**
- * TODO
  * 用于将URL路径名与路径匹配的公共API。
  * Public API for matching a URL pathname to a path.
  */

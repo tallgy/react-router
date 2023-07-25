@@ -20,6 +20,9 @@ class Switch extends React.Component {
 
           let element, match;
 
+          // 我们在这里使用React.Children.forEach而不是React.Children.toArray().find()，
+          // 因为 toArray 为所有的子元素添加了键，
+          // 而且我们不想为两个在不同url上呈现相同组件的<Route>触发 unmount/ reount。
           // We use React.Children.forEach instead of React.Children.toArray().find()
           // here because toArray adds keys to all child elements and we do not want
           // to trigger an unmount/remount for two <Route>s that render the same

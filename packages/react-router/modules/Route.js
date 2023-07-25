@@ -52,6 +52,36 @@ class Route extends React.Component {
             children = null;
           }
 
+          /**
+           * 计算逻辑
+           * 如果匹配 先看 children 再执行 相关children
+           *    然后看 component 
+           *    最后看 render
+           *    没有就 null
+           * 如果没有匹配，那么看 children 是否为一个方法
+           *    是一个方法就执行，不是方法就是 null
+           */
+          // 判断逻辑
+          // if match
+          //  if children
+          //    if typeof children === 'function'
+          //      如果匹配上了，且存在 children 且 children 类型为 function。
+          //      判断是否为 开发模式 执行不同的方法
+          //      if dev then evalChildrenDev(children)
+          //      else children()
+          //    如果 children不是方法，那么直接返回 children
+          //    else children
+          //  如果 没有 children 那么使用 component
+          //  else if component then React.createElement()
+          //  else if render then render()
+          //  else then null
+          // 如果没有匹配上，但是 children是一个方法也会去执行
+          // 这里的原因不知道是为什么，但是所造成的结论就是，
+          // 如果是 children 方法，那么不管是否匹配都会被渲染
+          // else if typeof children === "function"
+          //  if DEV then evalChildrenDev
+          //  else children()
+          // else null
           return (
             <RouterContext.Provider value={props}>
               {props.match

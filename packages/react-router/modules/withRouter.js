@@ -6,6 +6,7 @@ import invariant from "tiny-invariant";
 import RouterContext from "./RouterContext.js";
 
 /**
+ * 访问命令式API的公共高阶组件
  * A public higher-order component to access the imperative API
  */
 function withRouter(Component) {

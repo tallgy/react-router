@@ -45,6 +45,13 @@ function staticHandler(methodName) {
 function noop() {}
 
 /**
+ * 一个“静态”<Router>的公共顶级API，
+ * 之所以这么叫，是因为它实际上不能改变当前的位置。
+ * 相反，它只是在上下文对象中记录位置变化。
+ * 主要用于测试和服务器呈现场景。
+ * 
+ * 静态路由，没有使用 context 和 provider 所以不会更新路由的渲染
+ * 
  * The public top-level API for a "static" <Router>, so-called because it
  * can't actually change the current location. Instead, it just records
  * location changes in a context object. Useful mainly in testing and
